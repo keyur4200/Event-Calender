@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Calendar</title>
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Custom styles -->
+    <link href="css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="jumbotron">
+            <div class="container">
+                <h3 class="text-center">Calender</h3>
+                <h5 class="mb-1 text-center">
+                    Calender for Event mangement
+                </h5>
+                <div class="text-center">
+                    <span class="d-inline-block p-1 col-1 bg-dark"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Our Strategy Section -->
+    <div class="container small">
+        <div id='calendar'></div>
+    </div>
+    <!-- /.row -->
+    <!-- Bootstrap core JavaScript -->
+    <script src="Scripts/jquery-3.0.0.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" />
+    <!-- <script src="Scripts/jquery-3.0.0.slim.min.js"></script> -->
+    <script src="Scripts/bootstrap.min.js"></script>
+    <script src="Scripts/bootstrap.bundle.min.js"></script>
+    <script src="Scripts/boot_cal.js"></script>
+    <script>
+    $(document).ready(function() {
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+
+        var calendar = $('#calendar').fullCalendar({
+            header: {
+                left: 'title',
+                center: 'agendaDay,agendaWeek,month',
+                right: 'prev,next today'
+            },
+            editable: true,
+            firstDay: 0,
+            selectable: true,
+            defaultView: 'month',
+            axisFormat: 'h:mm',
+            columnFormat: {
+                month: 'ddd',
+                week: 'ddd d',
+                day: 'dddd M/d',
+                agendaDay: 'dddd d'
+            },
+            titleFormat: {
+                month: 'MMMM yyyy',
+                week: "MMMM yyyy",
+                day: 'MMMM yyyy'
+            },
+            allDaySlot: true,
+            selectHelper: true,
+            select: function(start, end, allDay) {
+                var title = prompt('Event Title:');
+                if (title) {
+                    calendar.fullCalendar('renderEvent', {
+                            title: title,
+                            start: start,
+                            end: end,
+                            allDay: allDay
+                        },
+                        true
+                    );
+                }
+                calendar.fullCalendar('unselect');
+            },
+            droppable: true,
+            drop: function(date, allDay) {
+
+                var originalEventObject = $(this).data('eventObject');
+
+                var copiedEventObject = $.extend({}, originalEventObject);
+
+                copiedEventObject.start = date;
+                copiedEventObject.allDay = allDay;
+
+
+                $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+
+                if ($('#drop-remove').is(':checked')) {
+
+                    $(this).remove();
+                }
+            },
+            events: [{
+                    title: 'All Day Event',
+                    start: new Date(y, m, 1)
+                },
+                {
+                    id: 999,
+                    title: 'Repeating Event',
+                    start: new Date(y, m, d - 3, 16, 0),
+                    allDay: false,
+                    className: 'info1'
+                },
+                {
+                    id: 99,
+                    title: 'Repeating Event',
+                    start: new Date(y, m, d + 4, 16, 0),
+                    allDay: false,
+                    className: 'info'
+                },
+
+                {
+                    title: 'Birthday Party',
+                    start: new Date(y, m, d + 1, 19, 0),
+                    end: new Date(y, m, d + 1, 22, 30),
+                    allDay: false,
+                },
+                {
+                    title: 'Meeting',
+                    start: new Date(y, m, d, 10, 0),
+                    end: new Date(y, m, d, 10, 60),
+                    allDay: false,
+                    className: 'important'
+                },
+                {
+                    title: 'Lunch',
+                    start: new Date(y, m, d, 12, 0),
+                    end: new Date(y, m, d, 14, 0),
+                    allDay: false,
+                    className: 'important'
+                },
+                {
+                    title: 'Click for Google',
+                    start: new Date(y, m, 28),
+                    end: new Date(y, m, 29),
+                    url: 'https://www.google.com',
+                    className: 'success'
+                }
+            ],
+        });
+    });
+    </script>
+</body>
+
+</html>
